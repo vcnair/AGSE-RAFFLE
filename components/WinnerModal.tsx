@@ -1,7 +1,6 @@
-
-import React from 'react';
+import React from 'https://esm.sh/react@19.0.0';
 import { Employee } from '../types';
-import { Trophy, X, Star, History, Zap, ShieldCheck } from 'lucide-react';
+import { Trophy, X, Star, History, Zap, ShieldCheck } from 'https://esm.sh/lucide-react';
 
 interface WinnerModalProps {
   winner: Employee | null;
@@ -22,7 +21,7 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({ winner, onClose, onNew
 
       <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col items-center justify-center p-6 text-center animate-in zoom-in-95 duration-500">
         
-        {/* Award Emblem - Scaled Down */}
+        {/* Award Emblem */}
         <div className="mb-6 flex justify-center items-center gap-6 flex-shrink-0">
            <Star size={24} className="text-amber-500 animate-pulse hidden sm:block" />
            <div className="relative">
@@ -65,11 +64,10 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({ winner, onClose, onNew
           </div>
         </div>
 
-        {/* Action Buttons - Scaled Down and Always Visible */}
         <div className="mt-10 flex flex-row items-center justify-center gap-4 flex-shrink-0">
           <button 
             onClick={onNewDraw}
-            className="group relative px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-black text-sm rounded-xl transition-all border-t border-amber-300 shadow-xl uppercase tracking-widest flex items-center gap-3 active:scale-95"
+            className="group relative px-8 py-4 bg-amber-600 hover:bg-amber-500 text-white font-black text-sm rounded-xl transition-all border-t border-amber-300 shadow-xl uppercase tracking-widest flex items-center gap-3 active:scale-95 pointer-events-auto"
           >
             <Zap size={18} className="fill-white" />
             <span>New Draw</span>
@@ -77,17 +75,16 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({ winner, onClose, onNew
 
           <button 
             onClick={() => onClose(true)}
-            className="group px-8 py-4 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-black text-sm rounded-xl transition-all border border-white/10 uppercase tracking-widest flex items-center gap-3 active:scale-95"
+            className="group px-8 py-4 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-black text-sm rounded-xl transition-all border border-white/10 uppercase tracking-widest flex items-center gap-3 active:scale-95 pointer-events-auto"
           >
             <History size={18} />
             <span>Archive</span>
           </button>
         </div>
 
-        {/* Improved Close Button */}
         <button 
           onClick={() => onClose(false)}
-          className="absolute top-0 right-0 p-4 text-white/30 hover:text-white transition-all flex items-center gap-2 text-xs font-bold"
+          className="absolute top-0 right-0 p-4 text-white/30 hover:text-white transition-all flex items-center gap-2 text-xs font-bold pointer-events-auto"
         >
           <span className="hidden sm:inline uppercase tracking-widest">Close</span>
           <X size={24} />

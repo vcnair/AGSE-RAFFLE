@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'https://esm.sh/react@19.0.0';
 import { Employee } from '../types';
-import { Trophy, Sparkles, RefreshCcw } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { Trophy, Sparkles, RefreshCcw } from 'https://esm.sh/lucide-react@0.460.0';
+import confetti from 'https://esm.sh/canvas-confetti@1.9.3';
 import { audioManager } from '../utils/audio';
 
 interface RaffleStageProps {

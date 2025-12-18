@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'https://esm.sh/react@19.0.0';
 import { parseEmployeeCSV } from './utils/csvParser';
 import { RAW_CSV_DATA } from './constants';
 import { Employee, RaffleHistoryEntry } from './types';
 import { RaffleStage } from './components/RaffleStage';
 import { WinnerModal } from './components/WinnerModal';
 import { DailyWinners } from './components/DailyWinners';
-import { LayoutDashboard, Trash2, Star } from 'lucide-react';
+import { LayoutDashboard, Trash2, Star } from 'https://esm.sh/lucide-react@0.460.0';
 
 const HISTORY_STORAGE_KEY = 'agse_raffle_generator_v6_history';
 

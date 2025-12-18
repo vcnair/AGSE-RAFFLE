@@ -1,7 +1,6 @@
-
-import React, { useMemo } from 'react';
+import React, { useMemo } from 'https://esm.sh/react@19.0.0';
 import { RaffleHistoryEntry } from '../types';
-import { ArrowLeft, Trophy, Star, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowLeft, Trophy, ShieldCheck, Zap } from 'https://esm.sh/lucide-react';
 
 interface DailyWinnersProps {
   winners: RaffleHistoryEntry[];
@@ -10,7 +9,6 @@ interface DailyWinnersProps {
 }
 
 export const DailyWinners: React.FC<DailyWinnersProps> = ({ winners, onBack, onClear }) => {
-  // Determine grid layout and font size based on winner count to keep things visible "at the same time"
   const layoutConfig = useMemo(() => {
     const count = winners.length;
     if (count <= 1) return { grid: 'grid-cols-1', text: 'text-7xl lg:text-[12rem]', subText: 'text-3xl' };
@@ -21,8 +19,6 @@ export const DailyWinners: React.FC<DailyWinnersProps> = ({ winners, onBack, onC
 
   return (
     <div className="h-screen w-screen bg-[#020617] text-white flex flex-col overflow-hidden animate-in fade-in duration-500">
-      
-      {/* Dynamic Header */}
       <header className="px-8 py-6 lg:px-12 lg:py-8 flex items-center justify-between flex-shrink-0 bg-slate-950/50 backdrop-blur-md border-b border-white/5 z-20">
         <div className="flex items-center gap-6 lg:gap-10">
           <button 
@@ -52,7 +48,6 @@ export const DailyWinners: React.FC<DailyWinnersProps> = ({ winners, onBack, onC
         </div>
       </header>
 
-      {/* Main Winners Display - Optimized for simultaneous viewing */}
       <main className="flex-1 p-6 lg:p-10 relative bg-[radial-gradient(circle_at_center,_#0f172a_0%,_#020617_100%)] overflow-hidden">
         {winners.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center gap-8 opacity-10">
@@ -91,7 +86,6 @@ export const DailyWinners: React.FC<DailyWinnersProps> = ({ winners, onBack, onC
                   {entry.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
 
-                {/* Animated Background Pulse */}
                 <div className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/5 rounded-[2rem] transition-colors duration-500 pointer-events-none"></div>
               </div>
             ))}
@@ -99,7 +93,6 @@ export const DailyWinners: React.FC<DailyWinnersProps> = ({ winners, onBack, onC
         )}
       </main>
 
-      {/* Footer Actions */}
       <footer className="px-8 py-8 bg-slate-950/80 border-t border-white/5 backdrop-blur-xl flex justify-center items-center gap-6 flex-shrink-0 z-20">
         <button 
           onClick={onBack}
@@ -108,7 +101,7 @@ export const DailyWinners: React.FC<DailyWinnersProps> = ({ winners, onBack, onC
           <Zap size={24} className="fill-white" />
           <span>New Raffle Draw</span>
         </button>
-      </header>
+      </footer>
     </div>
   );
 };
