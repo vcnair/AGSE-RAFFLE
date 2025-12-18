@@ -1,12 +1,11 @@
-
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { parseEmployeeCSV } from './utils/csvParser';
-import { RAW_CSV_DATA } from './constants';
-import { Employee, RaffleHistoryEntry } from './types';
-import { RaffleStage } from './components/RaffleStage';
-import { WinnerModal } from './components/WinnerModal';
-import { DailyWinners } from './components/DailyWinners';
-import { LayoutDashboard, Trash2, Star, ShieldCheck } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { parseEmployeeCSV } from './utils/csvParser.ts';
+import { RAW_CSV_DATA } from './constants.ts';
+import { Employee, RaffleHistoryEntry } from './types.ts';
+import { RaffleStage } from './components/RaffleStage.tsx';
+import { WinnerModal } from './components/WinnerModal.tsx';
+import { DailyWinners } from './components/DailyWinners.tsx';
+import { LayoutDashboard, Trash2, Star } from 'lucide-react';
 
 const HISTORY_STORAGE_KEY = 'agse_raffle_generator_v6_history';
 
@@ -134,7 +133,7 @@ const App: React.FC = () => {
            </div>
         </header>
 
-        {/* Empty space for middle (RaffleStage draws its own UI here) */}
+        {/* Empty space for middle */}
         <div className="flex-1" />
 
         {/* Footer Navigation */}
