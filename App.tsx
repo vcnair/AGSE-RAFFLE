@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { parseEmployeeCSV } from './utils/csvParser.ts';
-import { RAW_CSV_DATA } from './constants.ts';
-import { Employee, RaffleHistoryEntry } from './types.ts';
-import { RaffleStage } from './components/RaffleStage.tsx';
-import { WinnerModal } from './components/WinnerModal.tsx';
-import { DailyWinners } from './components/DailyWinners.tsx';
+import { parseEmployeeCSV } from './utils/csvParser';
+import { RAW_CSV_DATA } from './constants';
+import { Employee, RaffleHistoryEntry } from './types';
+import { RaffleStage } from './components/RaffleStage';
+import { WinnerModal } from './components/WinnerModal';
+import { DailyWinners } from './components/DailyWinners';
 import { LayoutDashboard, Trash2, Star } from 'lucide-react';
 
 const HISTORY_STORAGE_KEY = 'agse_raffle_generator_v6_history';
@@ -18,7 +18,6 @@ const App: React.FC = () => {
   const [showWinnerModal, setShowWinnerModal] = useState(false);
   const [view, setView] = useState<'stage' | 'daily'>('stage');
 
-  // Load history from local storage
   useEffect(() => {
     const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
     if (saved) {
@@ -35,7 +34,6 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Save history locally
   useEffect(() => {
     localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
   }, [history]);
@@ -90,8 +88,6 @@ const App: React.FC = () => {
 
   return (
     <div className="h-screen w-screen bg-[#020617] text-slate-200 flex flex-col selection:bg-amber-500 selection:text-black font-sans overflow-hidden">
-      
-      {/* Background Raffle Stage - Full Page Area */}
       <RaffleStage 
         employees={employees} 
         onWinner={handleWinner} 
@@ -102,18 +98,13 @@ const App: React.FC = () => {
         onReset={resetStage}
       />
 
-      {/* Foreground Interface Content */}
       <div className="relative z-50 flex flex-col h-full pointer-events-none">
-        
-        {/* Header with Centered Title */}
         <header className="w-full px-12 py-10 flex items-start justify-between">
-           {/* Left Stat */}
            <div className="flex flex-col items-start bg-slate-950/40 backdrop-blur-md p-4 rounded-2xl border border-white/5 pointer-events-auto">
               <span className="text-amber-500/40 text-[10px] uppercase font-black tracking-widest mb-1">Employee Pool</span>
               <div className="text-amber-500 font-mono font-black text-2xl leading-none">{employees.length}</div>
            </div>
 
-           {/* Centered Large Title */}
            <div className="absolute left-1/2 -translate-x-1/2 top-8 flex flex-col items-center">
               <div className="relative group">
                 <div className="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full scale-150 opacity-50 group-hover:opacity-100 transition-opacity"></div>
@@ -126,17 +117,14 @@ const App: React.FC = () => {
               </div>
            </div>
 
-           {/* Right Stat */}
            <div className="flex flex-col items-end bg-slate-950/40 backdrop-blur-md p-4 rounded-2xl border border-white/5 pointer-events-auto">
               <span className="text-amber-500/40 text-[10px] uppercase font-black tracking-widest mb-1">Today's Winners</span>
               <div className="text-white font-mono font-black text-2xl leading-none">{todayWinners.length}</div>
            </div>
         </header>
 
-        {/* Empty space for middle */}
         <div className="flex-1" />
 
-        {/* Footer Navigation */}
         <footer className="w-full px-12 py-12 flex items-center justify-between">
           <button 
             onClick={clearHistory}

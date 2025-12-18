@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Employee } from '../types';
-import { Trophy, Sparkles, RefreshCcw, Zap } from 'lucide-react';
-import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+import { Trophy, Sparkles, RefreshCcw } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { audioManager } from '../utils/audio';
 
 interface RaffleStageProps {
@@ -43,10 +42,9 @@ export const RaffleStage: React.FC<RaffleStageProps> = ({
   const startTimeRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
 
-  // Expanded grid for full-screen coverage
   const gridStats = useMemo(() => ({
     cols: 4, 
-    rowSpacing: 35, // Massive spacing to prevent jumbling
+    rowSpacing: 35,
     get totalHeight() { return Math.ceil(employees.length / this.cols) * this.rowSpacing; }
   }), [employees.length]);
 
@@ -146,10 +144,8 @@ export const RaffleStage: React.FC<RaffleStageProps> = ({
 
   return (
     <div className="fixed inset-0 z-0 bg-[#020617] overflow-hidden">
-      {/* Background Gradient Layer */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#0f172a_0%,_#020617_90%)] opacity-80"></div>
       
-      {/* Name Particles Layer - Now across whole screen */}
       <div className="absolute inset-0 pointer-events-none">
         {particles.map((p) => {
           let displayY = p.isVortex ? p.y : (p.y - scrollOffset);
@@ -178,7 +174,6 @@ export const RaffleStage: React.FC<RaffleStageProps> = ({
         })}
       </div>
 
-      {/* Center Interactive Zone */}
       <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
         <div className="pointer-events-auto flex flex-col items-center">
           {!isSpinning && !isDone && (
@@ -220,7 +215,6 @@ export const RaffleStage: React.FC<RaffleStageProps> = ({
         </div>
       </div>
 
-      {/* Overlay vignette */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_0%,_#020617_100%)] opacity-40"></div>
     </div>
   );

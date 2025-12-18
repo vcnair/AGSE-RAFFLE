@@ -1,16 +1,13 @@
-
 import { Employee } from '../types';
 
 export function parseEmployeeCSV(csv: string): Employee[] {
   const lines = csv.split('\n');
   const result: Employee[] = [];
 
-  // Skip header
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
 
-    // Handle CSV with potential quoted fields (like "Last, First")
     const parts: string[] = [];
     let currentPart = '';
     let inQuotes = false;
