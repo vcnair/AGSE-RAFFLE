@@ -49,9 +49,12 @@ export const AudioSettings: React.FC<AudioSettingsProps> = ({ isOpen, onClose })
   const handleFileUpload = async (file: File, type: 'tick' | 'win') => {
     setUploadError('');
     
-    // Validate file type
-    if (!file.type.startsWith('audio/')) {
-      setUploadError('Please upload a valid audio file (MP3, WAV, etc.)');
+    // Validate file type by MIME type and extension
+    const validExtensions = ['.mp3', '.wav', '.ogg', '.m4a', '.aac', '.flac'];
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    
+    if (!file.type.startsWith('audio/') && !validExtensions.includes(fileExtension)) {
+      setUploadError('Please upload a valid audio file (MP3, WAV, OGG, M4A, AAC, FLAC)');
       return;
     }
     

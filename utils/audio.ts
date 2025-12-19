@@ -51,6 +51,19 @@ class RaffleAudio {
   }
 
   private loadCustomAudio() {
+    // Clean up previous Audio objects
+    if (this.customTickAudio) {
+      this.customTickAudio.pause();
+      this.customTickAudio.src = '';
+      this.customTickAudio = null;
+    }
+    if (this.customWinAudio) {
+      this.customWinAudio.pause();
+      this.customWinAudio.src = '';
+      this.customWinAudio = null;
+    }
+    
+    // Create new Audio objects
     if (this.settings.customTickUrl) {
       this.customTickAudio = new Audio(this.settings.customTickUrl);
       this.customTickAudio.volume = this.settings.volume;
