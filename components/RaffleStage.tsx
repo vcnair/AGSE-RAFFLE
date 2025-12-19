@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from 'https://esm.sh/react@19.0.0';
-import { Employee } from '../types';
+import { Employee, RaffleHistoryEntry } from '../types';
 import { Trophy, Sparkles, RefreshCcw } from 'https://esm.sh/lucide-react@0.460.0';
 import confetti from 'https://esm.sh/canvas-confetti@1.9.3';
 import { audioManager } from '../utils/audio';
 
 interface RaffleStageProps {
   employees: Employee[];
+  history: RaffleHistoryEntry[];
   onWinner: (winner: Employee) => void;
   isSpinning: boolean;
   setIsSpinning: (val: boolean) => void;
@@ -28,7 +29,8 @@ interface Particle {
 }
 
 export const RaffleStage: React.FC<RaffleStageProps> = ({ 
-  employees, 
+  employees,
+  history,
   onWinner, 
   isSpinning, 
   setIsSpinning,
@@ -41,6 +43,12 @@ export const RaffleStage: React.FC<RaffleStageProps> = ({
   const requestRef = useRef<number>(0);
   const startTimeRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
+
+  // Get list of eligible employees (those who haven't won yet)
+  const eligibleEmployees = useMemo(() => {
+    const winnerIds = new Set(history.map(entry => entry.winner.id));
+    return employees.filter(emp => !winnerIds.has(emp.id));
+  }, [employees, history]);
 
   const gridStats = useMemo(() => ({
     cols: 4, 
@@ -119,14 +127,14 @@ export const RaffleStage: React.FC<RaffleStageProps> = ({
   }, [isSpinning, isDone, gridStats.totalHeight]);
 
   const startDraw = () => {
-    if (isSpinning || employees.length === 0) return;
+    if (isSpinning || eligibleEmployees.length === 0) return;
     setIsSpinning(true);
     setIsDone(false);
     startTimeRef.current = performance.now();
     const tickInterval = setInterval(() => audioManager.playTick(0.15), 100);
     setTimeout(() => {
       clearInterval(tickInterval);
-      const winner = employees[Math.floor(Math.random() * employees.length)];
+      const winner = eligibleEmployees[Math.floor(Math.random() * eligibleEmployees.length)];
       setIsSpinning(false);
       setIsDone(true);
       onWinner(winner);
@@ -178,15 +186,27 @@ export const RaffleStage: React.FC<RaffleStageProps> = ({
         <div className="pointer-events-auto flex flex-col items-center">
           {!isSpinning && !isDone && (
             <div className="flex flex-col items-center gap-8 animate-in fade-in zoom-in-95 duration-1000">
-              <button 
-                onClick={startDraw} 
-                className="group relative px-24 py-12 lg:px-32 lg:py-16 bg-gradient-to-br from-amber-400 via-amber-600 to-amber-900 rounded-[3rem] text-white font-black text-5xl lg:text-7xl uppercase tracking-[0.2em] shadow-[0_40px_100px_rgba(217,119,6,0.4)] border-t-4 border-amber-300/40 transform transition-all hover:scale-105 active:scale-95"
-              >
-                <div className="flex items-center gap-10">
-                  <Trophy size={80} className="text-white drop-shadow-lg animate-bounce" />
-                  <span>Draw</span>
+              {eligibleEmployees.length > 0 ? (
+                <button 
+                  onClick={startDraw} 
+                  className="group relative px-24 py-12 lg:px-32 lg:py-16 bg-gradient-to-br from-amber-400 via-amber-600 to-amber-900 rounded-[3rem] text-white font-black text-5xl lg:text-7xl uppercase tracking-[0.2em] shadow-[0_40px_100px_rgba(217,119,6,0.4)] border-t-4 border-amber-300/40 transform transition-all hover:scale-105 active:scale-95"
+                >
+                  <div className="flex items-center gap-10">
+                    <Trophy size={80} className="text-white drop-shadow-lg animate-bounce" />
+                    <span>Draw</span>
+                  </div>
+                </button>
+              ) : (
+                <div className="flex flex-col items-center gap-6">
+                  <div className="px-16 py-8 bg-slate-950/80 backdrop-blur-md rounded-[2.5rem] border-2 border-amber-500/30">
+                    <div className="text-amber-500 font-black text-4xl lg:text-6xl uppercase tracking-[0.3em] text-center">All Employees</div>
+                    <div className="text-amber-500 font-black text-4xl lg:text-6xl uppercase tracking-[0.3em] text-center">Have Won!</div>
+                  </div>
+                  <div className="text-white/60 font-semibold text-xl text-center max-w-md">
+                    Clear the history to start a new round
+                  </div>
                 </div>
-              </button>
+              )}
             </div>
           )}
 
