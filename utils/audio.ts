@@ -180,7 +180,7 @@ class RaffleAudio {
 
     if (this.settings.mode === 'custom' && this.customTickAudio) {
       try {
-        const audio = this.customTickAudio.cloneNode() as HTMLAudioElement;
+        const audio = new Audio(this.customTickAudio.src);
         audio.volume = volume * this.settings.volume;
         await audio.play();
       } catch (e) {
@@ -199,7 +199,7 @@ class RaffleAudio {
 
     if (this.settings.mode === 'custom' && this.customWinAudio) {
       try {
-        const audio = this.customWinAudio.cloneNode() as HTMLAudioElement;
+        const audio = new Audio(this.customWinAudio.src);
         audio.volume = this.settings.volume;
         await audio.play();
       } catch (e) {
