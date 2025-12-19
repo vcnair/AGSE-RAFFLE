@@ -5,7 +5,8 @@ import { Employee, RaffleHistoryEntry } from './types';
 import { RaffleStage } from './components/RaffleStage';
 import { WinnerModal } from './components/WinnerModal';
 import { DailyWinners } from './components/DailyWinners';
-import { LayoutDashboard, Trash2, Star } from 'https://esm.sh/lucide-react@0.460.0';
+import { AudioSettings } from './components/AudioSettings';
+import { LayoutDashboard, Trash2, Star, Volume2 } from 'https://esm.sh/lucide-react@0.460.0';
 
 const HISTORY_STORAGE_KEY = 'agse_raffle_generator_v6_history';
 
@@ -17,6 +18,7 @@ const App: React.FC = () => {
   const [currentWinner, setCurrentWinner] = useState<Employee | null>(null);
   const [showWinnerModal, setShowWinnerModal] = useState(false);
   const [view, setView] = useState<'stage' | 'daily'>('stage');
+  const [showAudioSettings, setShowAudioSettings] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(HISTORY_STORAGE_KEY);
@@ -142,9 +144,13 @@ const App: React.FC = () => {
             <span>Hall of Fame</span>
           </button>
           
-          <div className="w-16 h-16 bg-slate-950/40 backdrop-blur-md rounded-2xl border border-white/5 flex items-center justify-center pointer-events-auto opacity-40">
-            <LayoutDashboard size={24} className="text-amber-500" />
-          </div>
+          <button 
+            onClick={() => setShowAudioSettings(true)}
+            className="p-5 text-amber-500 hover:text-amber-400 transition-all pointer-events-auto bg-slate-950/40 backdrop-blur-md rounded-2xl border border-white/5 active:scale-95 hover:bg-slate-900"
+            title="Audio Settings"
+          >
+            <Volume2 size={24} />
+          </button>
         </footer>
       </div>
 
@@ -152,6 +158,11 @@ const App: React.FC = () => {
         winner={currentWinner} 
         onClose={closeWinner} 
         onNewDraw={resetStage}
+      />
+
+      <AudioSettings 
+        isOpen={showAudioSettings}
+        onClose={() => setShowAudioSettings(false)}
       />
     </div>
   );
