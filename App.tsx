@@ -78,6 +78,11 @@ const App: React.FC = () => {
     return history.filter(entry => entry.timestamp.toDateString() === today);
   }, [history]);
 
+  const eligibleEmployeesCount = useMemo(() => {
+    const winnerIds = new Set(history.map(entry => entry.winner.id));
+    return employees.filter(emp => !winnerIds.has(emp.id)).length;
+  }, [employees, history]);
+
   if (view === 'daily') {
     return (
       <DailyWinners 
@@ -91,7 +96,8 @@ const App: React.FC = () => {
   return (
     <div className="h-screen w-screen bg-[#020617] text-slate-200 flex flex-col selection:bg-amber-500 selection:text-black font-sans overflow-hidden">
       <RaffleStage 
-        employees={employees} 
+        employees={employees}
+        history={history}
         onWinner={handleWinner} 
         isSpinning={isSpinning}
         setIsSpinning={setIsSpinning}
@@ -103,8 +109,8 @@ const App: React.FC = () => {
       <div className="relative z-50 flex flex-col h-full pointer-events-none">
         <header className="w-full px-12 py-10 flex items-start justify-between">
            <div className="flex flex-col items-start bg-slate-950/40 backdrop-blur-md p-4 rounded-2xl border border-white/5 pointer-events-auto">
-              <span className="text-amber-500/40 text-[10px] uppercase font-black tracking-widest mb-1">Employee Pool</span>
-              <div className="text-amber-500 font-mono font-black text-2xl leading-none">{employees.length}</div>
+              <span className="text-amber-500/40 text-[10px] uppercase font-black tracking-widest mb-1">Eligible Pool</span>
+              <div className="text-amber-500 font-mono font-black text-2xl leading-none">{eligibleEmployeesCount}</div>
            </div>
 
            <div className="absolute left-1/2 -translate-x-1/2 top-8 flex flex-col items-center">
