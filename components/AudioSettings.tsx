@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'https://esm.sh/react@19.0.0';
+import React, { useState, useEffect, useRef } from 'https://esm.sh/react@19.0.0';
 import { Volume2, VolumeX, Music, Upload, X } from 'https://esm.sh/lucide-react@0.460.0';
 import { audioManager, AudioMode, AudioSettings as AudioSettingsType } from '../utils/audio';
 
@@ -11,12 +11,23 @@ export const AudioSettings: React.FC<AudioSettingsProps> = ({ isOpen, onClose })
   const [settings, setSettings] = useState<AudioSettingsType>(audioManager.getSettings());
   const [tickFile, setTickFile] = useState<File | null>(null);
   const [winFile, setWinFile] = useState<File | null>(null);
+  const [uploadError, setUploadError] = useState<string>('');
+  const blobUrlsRef = useRef<string[]>([]);
 
   useEffect(() => {
     if (isOpen) {
       setSettings(audioManager.getSettings());
+      setUploadError('');
     }
   }, [isOpen]);
+
+  // Cleanup blob URLs on unmount
+  useEffect(() => {
+    return () => {
+      blobUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+      blobUrlsRef.current = [];
+    };
+  }, []);
 
   const handleModeChange = (mode: AudioMode) => {
     const newSettings = { ...settings, mode };
@@ -36,8 +47,24 @@ export const AudioSettings: React.FC<AudioSettingsProps> = ({ isOpen, onClose })
   };
 
   const handleFileUpload = async (file: File, type: 'tick' | 'win') => {
+    setUploadError('');
+    
+    // Validate file type
+    if (!file.type.startsWith('audio/')) {
+      setUploadError('Please upload a valid audio file (MP3, WAV, etc.)');
+      return;
+    }
+    
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('File size must be less than 10MB');
+      return;
+    }
+    
     try {
       const url = URL.createObjectURL(file);
+      blobUrlsRef.current.push(url);
+      
       const newSettings = {
         ...settings,
         mode: 'custom' as AudioMode,
@@ -60,11 +87,17 @@ export const AudioSettings: React.FC<AudioSettingsProps> = ({ isOpen, onClose })
       }
     } catch (e) {
       console.error('Failed to upload audio file:', e);
-      alert('Failed to load audio file. Please try a different file.');
+      setUploadError('Failed to load audio file. Please try a different file.');
     }
   };
 
   const clearCustomAudio = (type: 'tick' | 'win') => {
+    const urlToRevoke = type === 'tick' ? settings.customTickUrl : settings.customWinUrl;
+    if (urlToRevoke && urlToRevoke.startsWith('blob:')) {
+      URL.revokeObjectURL(urlToRevoke);
+      blobUrlsRef.current = blobUrlsRef.current.filter(url => url !== urlToRevoke);
+    }
+    
     const newSettings = {
       ...settings,
       ...(type === 'tick' ? { customTickUrl: undefined } : { customWinUrl: undefined })
@@ -83,6 +116,7 @@ export const AudioSettings: React.FC<AudioSettingsProps> = ({ isOpen, onClose })
     } else {
       setWinFile(null);
     }
+    setUploadError('');
   };
 
   if (!isOpen) return null;
@@ -222,6 +256,15 @@ export const AudioSettings: React.FC<AudioSettingsProps> = ({ isOpen, onClose })
                   </label>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {uploadError && (
+            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+              <p className="text-sm text-red-400">
+                ⚠️ <strong>Error:</strong> {uploadError}
+              </p>
             </div>
           )}
 
